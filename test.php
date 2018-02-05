@@ -1,3 +1,3 @@
 <?php
-echo "Dess e en hest";
+echo "Fredrik e en hest";
 ?>
