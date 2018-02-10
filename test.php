@@ -6,6 +6,6 @@ $answer = $obj -> {"answer"};
 
 $name2 = "Henri";
 $answer2 = FALSE;
-$array = array("name" => $name, "answer" => $answer);
+$array = array("name" => $name2, "answer" => $answer2);
 echo json_encode($array);
 ?>
