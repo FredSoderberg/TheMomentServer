@@ -1,30 +1,27 @@
 <?php
 //Decodes JSON
 $jsonobj = $_GET["jsonobj"];
-$obj = json_decode($jsonobj);
-foreach ($obj->type as $type) {
-	$typeInSever = $type -> {"typeInSever"};
-	# code...
-}
+$obj = json_decode($jsonobj, true );
 
-//$typeInSever = $type -> {"typeInSever"};
-	# code...
+//$type = func_get_arg(1);
+//$typeInServer = $type -> {"typeInServer"};
 /*
-foreach ($data as $name => $value) {
-	foreach ($value as $entry) {
-        //echo '  ' . $entry->firstName;
-		$typeInSever = $entry->typeInSever;
-		//$name = $entry -> name;
-}
+//$typeInSever = $obj["type"]);
+foreach ($obj as $type => $value){
+	//foreach ($value as $type) {
+		$typeInSever = $value -> {"typeInSever"};
+	//}
+
+	$typeInSever = $key -> {"typeInSever"};
 }
 */
 //$name = $obj[1] -> {"name"};
-//$typeInSever = $obj->type->typeInSever;
+$typeInServer = $obj[1];
+//$typeInServer = $typeInS->typeInServer;
 
-$array = array("name" => $name, "answer" => null, "typeInSever" => $typeInSever);
-
+//Just to see what type if has gotten out:
 //Cases, will be used to determine what to do when called. 
-switch ($typeInSever){
+switch ($typeInServer){
 	case "basic":	
 		$name2 = "Henri";
 		$answer2 = FALSE;
@@ -32,10 +29,10 @@ switch ($typeInSever){
 		echo json_encode($array);
 		break;
 	case "example":
+		$name = "Ex";
+		$answer = FALSE;
 		$array = array("name" => $name, "answer" => $answer);
 		echo json_encode($array);
 		break;
 }
-echo json_encode($array); //Should return with null in the object(right now a player object)
-
 ?>
