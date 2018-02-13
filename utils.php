@@ -5,7 +5,7 @@
  * Date: 2018-02-13
  * Time: 20:53
  */
-$form_action_func = $_POST['function'];
+$form_action_func = $_GET['function'];
 if(isset($form_action_func))
 {
     switch ($form_action_func) {
