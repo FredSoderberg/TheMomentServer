@@ -48,7 +48,7 @@ function getRandomRoom() {
         "claim": "Vi har",
         "correctAnswer": true
       },
-      "isPlayer": true
+      "isPlayer": false
     }
   ]
 }';
@@ -80,7 +80,7 @@ function getRoomByID($json) {
         "claim": "Vi har",
         "correctAnswer": true
       },
-      "isPlayer": true
+      "isPlayer": false
     }
   ]
 }';
