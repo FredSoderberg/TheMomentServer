@@ -59,6 +59,16 @@ function getRoomByID($json) {
         "correctAnswer": true
       },
       "isPlayer": true
+    },
+      "id": 2,
+      "name": "Torkel",
+      "score": 3,
+      "answer": true,
+      "claim": {
+        "claim": "Vi har",
+        "correctAnswer": true
+      },
+      "isPlayer": true
     }
   ]
 }';
