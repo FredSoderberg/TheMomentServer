@@ -29,17 +29,15 @@ function getRandomRoom() {
   "numOfPlayers": 1,
   "playerList": [
     {
-      "Player": {
-        "id": 1,
-        "name": "Uffe",
-        "score": 10,
-        "answer": true,
-        "claim": {
-          "claim": "Vi har",
-          "correctAnswer": true
-        },
-        "isPlayer": true
-      }
+      "id": 1,
+      "name": "Uffe",
+      "score": 10,
+      "answer": true,
+      "claim": {
+        "claim": "Vi har",
+        "correctAnswer": true
+      },
+      "isPlayer": true
     }
   ]
 }';
@@ -52,17 +50,15 @@ function getRoomByID($json) {
   "numOfPlayers": 1,
   "playerList": [
     {
-      "Player": {
-        "id": 1,
-        "name": "Uffe",
-        "score": 10,
-        "answer": true,
-        "claim": {
-          "claim": "Vi har",
-          "correctAnswer": true
-        },
-        "isPlayer": true
-      }
+      "id": 1,
+      "name": "Uffe",
+      "score": 10,
+      "answer": true,
+      "claim": {
+        "claim": "Vi har",
+        "correctAnswer": true
+      },
+      "isPlayer": true
     }
   ]
 }';
