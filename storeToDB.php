@@ -47,18 +47,7 @@ function updateRoom($json){
         "correctAnswer": true
       },
       "isPlayer": true
-    },
-    {
-      "id": 2,
-      "name": "Torkel",
-      "score": 3,
-      "answer": true,
-      "claim": {
-        "claim": "Vi har",
-        "correctAnswer": true
-      },
-      "isPlayer": false
-    }
+    }    
   ]
 }';
 }
@@ -71,17 +60,6 @@ function createRoom($json){
   "playerList": [
     {
       "id": 1,
-      "name": "Uffe",
-      "score": 10,
-      "answer": true,
-      "claim": {
-        "claim": "Vi har",
-        "correctAnswer": true
-      },
-      "isPlayer": true
-    },
-    {
-      "id": 2,
       "name": "Torkel",
       "score": 3,
       "answer": true,
