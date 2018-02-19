@@ -1,10 +1,6 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Nhunter
- * Date: 2018-02-14
- * Time: 14:54
- */
+require 'dbConnect.php';
+
 $form_action_func = $_GET['function'];
 $json = $_GET['jsonobj'];
 
