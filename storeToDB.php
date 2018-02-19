@@ -17,7 +17,7 @@ if(isset($form_action_func))
         	updateRoom($json);
         	break;
         case 'createRoom' :
-        	createRoom($json);
+        	createRoom();
         	break;
         case 'updateRoomSize':
             updateRoomSize($json);
@@ -35,7 +35,8 @@ function storePlayer($json) {
 }
 
 function updateRoom($json){
-	//TODO, add changes to Room
+	//TODO, add changes to Room, request room by id and then loop values and if changes are detected insert new value
+    //TODO probably gonna need a help function to handle players and claims.
     //dont return a room!
     /*
 	echo '{
@@ -58,59 +59,24 @@ function updateRoom($json){
     */
 }
 
-function createRoom($json){
-    echo 200;
-	//TODO create room
-    //- NO DONT! -> and return room
-    //RETURN ID!
-/*
- echo  '{
-  "ID": 10,
-  "numOfPlayers": 1,
-  "playerList": [
-    {
-      "id": 1,
-      "name": "Torkel",
-      "score": 3,
-      "answer": true,
-      "claim": {
-        "claim": "Vi har",
-        "correctAnswer": true
-      },
-      "isPlayer": false
-    }
-  ]
-}';
-*/
-}
-
-function temp($json) {
-    //EXAMPLE CODE!
+function createRoom(){
+    //This is standard for us on creating, but if needed we can insert the actual numOfPlayers
+    $val = null;
     $connection = db_connect();
     /* create a prepared statement */
-    if ($query = mysqli_prepare($connection, "SELECT District FROM City WHERE Name=?")) {
-
+    if ($query = mysqli_prepare($connection, "INSERT INTO Room (numOfPlayers) Values(?)")) {
         /* bind parameters for markers */
-        mysqli_stmt_bind_param($query, "s", $city);
+        mysqli_stmt_bind_param($query, "s", $val);
 
         /* execute query */
-        mysqli_stmt_execute($query);
-
-        /* bind result variables */
-        mysqli_stmt_bind_result($query, $district);
-
-        /* fetch value */
-        mysqli_stmt_fetch($query);
-
-        printf("%s is in district %s\n", $city, $district);
-
+        if(mysqli_stmt_execute($query)) {
+            echo mysqli_insert_id($connection);
+        } else {
+            echo "Failed";
+        }
         /* close statement */
         mysqli_stmt_close($query);
     }
-
     /* close connection */
     mysqli_close($connection);
 }
-
-
-?>
