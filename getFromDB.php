@@ -58,7 +58,7 @@ function getRoomByID($json) {
     //TODO query server with $json for room and encode it and send it back
     echo '{
   "ID": 10,
-  "numOfPlayers": 1,
+  "numOfPlayers": 10,
   "playerList": [
     {
       "id": 1,
