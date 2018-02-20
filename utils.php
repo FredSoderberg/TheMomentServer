@@ -1,18 +1,22 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Nhunter
- * Date: 2018-02-13
- * Time: 20:53
- */
+
 $form_action_func = $_GET['function'];
+$json = $_GET['jsonobj'];
 if(isset($form_action_func))
 {
     switch ($form_action_func) {
         case 'isServerAndDBUp':
             isServerAndDBUp();
             break;
+        case 'isRoundDone':
+            isRoundDone($json);
+            break;
     }
+}
+
+function isRoundDone($json) {
+    //TODO loop over all players in in room id and check if all players are round in json or above. if so echo true otherwise false! :D
+    echo $json;
 }
 
 function isServerAndDBUp() {
