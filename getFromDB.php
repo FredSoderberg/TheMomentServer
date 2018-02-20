@@ -79,6 +79,7 @@ function getRoomByID($json) {
       "isPlayer": false
     }
   ]
+  "currentClaimNo":0
 }';
 }
 ?>
