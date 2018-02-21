@@ -23,10 +23,10 @@ function db_connect() {
 
 /**
  * querys the DB and fetches one or multiple rows from the response.
- * @param $query the query which must be prepared before.
+ * @param $query mysqli_stmt, the query which must be prepared before.
  * @return array which contains rows at indexes, traverse with a foreach for example.
  */
-function db_query($query) {
+function dbQueryGetResult($query) {
     if(!mysqli_stmt_execute($query)) {
         echo "Failed";
     }
@@ -37,4 +37,29 @@ function db_query($query) {
     }
     mysqli_stmt_close($query);
     return $rows;
+}
+
+/**
+ * fires aquery and returns the resulting ID of the new object
+ * @param $query mysqli_stmt send to server
+ * @param $connection mysqli needed for returning ID
+ * @return int ID
+ */
+function dbQueryStoreGetId($query,$connection) {
+    if(mysqli_stmt_execute($query)) {
+        $id = mysqli_insert_id($connection);
+    } else {
+        $id = false;
+    }
+    mysqli_stmt_close($query);
+    return $id;
+}
+
+/**
+ * called when one needs to remove something from the DB.
+ * @param $query mysqli_stmt to send to server
+ * @return bool if success or not
+ */
+function dbQueryRemove($query) {
+    return mysqli_stmt_execute($query);
 }

@@ -57,7 +57,7 @@ function getRandomRoom() {
 /**
  * Collects the complete room by id from the DB.
  * @param $roomID int, matching the ID of a room in DB
- * @return json formatted room
+ * @return string in json format which is the room object client side.
  */
 function getRoomByID($roomID) {
     $connection = db_connect();
@@ -75,12 +75,12 @@ function getRoomByID($roomID) {
 function getRoomByIDWorker($roomID, $connection) {
     if ($query = mysqli_prepare($connection, "SELECT * FROM Room WHERE ID=?")) {
         mysqli_stmt_bind_param($query, "i", $roomID);
-        $room = db_query($query);
+        $room = dbQueryGetResult($query);
         $room = $room[0];
     }
     if ($query = mysqli_prepare($connection, "SELECT * FROM Player WHERE RoomID=?")) {
         mysqli_stmt_bind_param($query, "i", $roomID);
-        $playerRows = db_query($query);
+        $playerRows = dbQueryGetResult($query);
     }
     $playerList = [];
     foreach ($playerRows as $row) {
@@ -103,6 +103,7 @@ function getRoomByIDWorker($roomID, $connection) {
 function getClaimByID($claimID) {
     $connection = db_connect();
     $claim = getClaimByIDWorker($claimID,$connection);
+    mysqli_close($connection);
     echo json_encode($claim);
 }
 
@@ -115,7 +116,6 @@ function getClaimByID($claimID) {
 function getClaimByIDWorker($claimID, $connection) {
     if ($query = mysqli_prepare($connection, "SELECT * FROM Claim WHERE ID=?")) {
         mysqli_stmt_bind_param($query, "i", $claimID);
-        return db_query($query);
+        return dbQueryGetResult($query);
     }
 }
-?>

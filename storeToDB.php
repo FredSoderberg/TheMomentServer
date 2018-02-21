@@ -22,6 +22,8 @@ if(isset($form_action_func))
         case 'updateRoomSize':
             updateRoomSize($json);
             break;
+        case 'removePlayerByID':
+            removePlayerByID($json);
     }
 }
 
@@ -59,24 +61,60 @@ function updateRoom($json){
     */
 }
 
+/**
+ * creates a new room in db and returns the ID.
+ */
 function createRoom(){
-    //This is standard for us on creating, but if needed we can insert the actual numOfPlayers
-    $val = null;
     $connection = db_connect();
     /* create a prepared statement */
     if ($query = mysqli_prepare($connection, "INSERT INTO Room (numOfPlayers) Values(?)")) {
         /* bind parameters for markers */
         mysqli_stmt_bind_param($query, "s", $val);
-
-        /* execute query */
-        if(mysqli_stmt_execute($query)) {
-            echo mysqli_insert_id($connection);
-        } else {
-            echo "Failed";
-        }
-        /* close statement */
-        mysqli_stmt_close($query);
+        $id = dbQueryStoreGetId($query,$connection);
+        echo $id;
     }
-    /* close connection */
+}
+
+/**
+ * removes player by id from DB and if room is after empty it will be removed. echoes succes bool.
+ * @param $json string in JSON format containing [roomID,playerID]
+ */
+function removePlayerByID($json) {
+    $list = json_decode($json);
+    $roomID = $list[0];
+    $playerID = $list[1];
+
+    $connection = db_connect();
+    if ($query = mysqli_prepare($connection, "DELETE FROM Player WHERE ID=?")) {
+        mysqli_stmt_bind_param($query, "s", $playerID);
+        $resultPlayer =  dbQueryRemove($query);
+    }
+    if ($query = mysqli_prepare($connection, "SELECT * FROM Player WHERE RoomID=?")) {
+        mysqli_stmt_bind_param($query, "s", $roomID);
+        $playersInRoom =  dbQueryGetResult($query);
+    }
+
+    echo count($playersInRoom);
+    if (count($playersInRoom) == 0) {
+        print removeRoomByIDWorker($roomID,$connection);
+    }
     mysqli_close($connection);
+    //$result = $playersInRoom && $resultPlayer;
+    $result = true;
+    //TODO FIX IF FAIL!
+    echo $result;
+}
+
+/**
+ * Removes the room with id roomID from DB
+ * @param $roomID string to query with
+ * @param $connection mysqli, needed for db talk
+ * @return bool if success or not
+ */
+function removeRoomByIDWorker($roomID,$connection) {
+    if ($query = mysqli_prepare($connection, "DELETE FROM Room WHERE ID=?")) {
+        mysqli_stmt_bind_param($query, "s", $roomID);
+        return dbQueryRemove($query);
+    }
+
 }
