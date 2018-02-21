@@ -16,46 +16,37 @@ if(isset($form_action_func))
     }
 }
 
-isRoundDone("[6,1]");
-
+/**
+ * Gets all players from room with id provided in json.
+ * Then checks the one by round attribute, if one is on a lower round then one in json
+ * that round is considered not done yet and a false (0) will be echoed
+ * otherwise if all is on roundNo or above true will be echoed.
+ * @param $json containing [roomID,roundNo].
+ */
 function isRoundDone($json) {
     $list = json_decode($json);
-    $roomID = current($list);
-    next($list);
-    $roundNo = current($list);
+    $roomID = $list[0];
+    $roundNo = $list[1];
 
     $connection = db_connect();
-    if ($query = mysqli_prepare($connection, "SELECT * FROM Player WHERE RoomID=?")) {
-        /* bind parameters for markers */
+    if ($query = mysqli_prepare($connection, "SELECT * FROM player WHERE RoomID=?")) {
         mysqli_stmt_bind_param($query, "i", $roomID);
-
-        /* execute query */
-        if(!mysqli_stmt_execute($query)) {
-            echo "Failed";
-        }
-        /* bind result variables */
-        mysqli_stmt_bind_result($stmt, $district);
-
-        /* fetch value */
-        mysqli_stmt_fetch($stmt);
-
-        printf("GOT - %s",$district);
-        /* close statement */
-        mysqli_stmt_close($query);
+        $rows = db_query($query);
     }
-    /* close connection */
     mysqli_close($connection);
-    //TODO loop over all players in in room id and check if all players are round in json or above. if so echo true otherwise false! :D
 
-
-/*
-    $string = $roomID;
-    $string .= "-";
-    $string .= $roundNo;
-    echo $string;
-*/
+    foreach ($rows as $row) {
+        if ($row['Round'] < $roundNo) {
+            echo 0;
+            return;
+        }
+    }
+    echo 1;
 }
 
+/**
+ * A simple function that checks if the servers db is up.
+ */
 function isServerAndDBUp() {
     //TODO: Actually check if DB is online
     echo "True";
