@@ -32,8 +32,46 @@ function updateRoomSize($json) {
 }
 
 function storePlayer($json) {
-    //TODO save to DB and return ID!
-    echo "1";
+    $list = json_decode($json,true);
+    $lenght = count($list);
+    $name = $list[0]['name'];
+    $roomID = $list[1];
+    $roomSize = $list[2];
+    $connection = db_connect();
+    $playerID = storeNewPlayerWorker($connection,$name);
+    if ($lenght === 2) {
+        setPlayersRoomID($connection,$playerID,$roomID);
+    }
+    if ($lenght === 3) {
+        setRoomSize($connection,$roomID,$roomSize);
+    }
+    mysqli_close($connection);
+    echo $playerID;
+}
+
+function storeNewPlayerWorker($connection,$name){
+    if ($query = mysqli_prepare($connection, "INSERT INTO Player (Name) Values(?)")) {
+        mysqli_stmt_bind_param($query, "s", $name);
+        $id = dbQueryStoreGetId($query,$connection);
+        //TODO Guard for db failure
+        return $id;
+    }
+}
+
+function setPlayersRoomID($connection,$playerID,$roomID) {
+    if ($query = mysqli_prepare($connection, "UPDATE Player SET RoomID=? WHERE ID=?")) {
+        mysqli_stmt_bind_param($query, "ss", $roomID,$playerID);
+        dbQuery($query);
+        //TODO Guard for db failure
+    }
+}
+
+function setRoomSize ($connection,$roomID,$roomSize) {
+    if ($query = mysqli_prepare($connection, "UPDATE Room SET numOfPlayers=? WHERE ID=?")) {
+        mysqli_stmt_bind_param($query, "ss", $$roomSize,$$roomID);
+        dbQuery($query);
+        //TODO Guard for db failure
+    }
 }
 
 function updateRoom($json){
@@ -64,12 +102,12 @@ function updateRoom($json){
 /**
  * creates a new room in db and returns the ID.
  */
-function createRoom(){
+function createRoom($size){
     $connection = db_connect();
     /* create a prepared statement */
     if ($query = mysqli_prepare($connection, "INSERT INTO Room (numOfPlayers) Values(?)")) {
         /* bind parameters for markers */
-        mysqli_stmt_bind_param($query, "s", $val);
+        mysqli_stmt_bind_param($query, "s", $size);
         $id = dbQueryStoreGetId($query,$connection);
         echo $id;
     }

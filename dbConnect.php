@@ -63,3 +63,12 @@ function dbQueryStoreGetId($query,$connection) {
 function dbQueryRemove($query) {
     return mysqli_stmt_execute($query);
 }
+
+/**
+ * Send query to DB. Used if no response more then operational succes is needed
+ * @param $query mysqli_stmt to send to db
+ * @return bool success or failure
+ */
+function dbQuery($query) {
+    return mysqli_stmt_execute($query);
+}
