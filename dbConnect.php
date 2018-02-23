@@ -35,6 +35,7 @@ function dbQueryGetResult($query) {
     while ($row = mysqli_fetch_array($result, MYSQLI_ASSOC)) {
         $rows[] = $row;
     }
+    //mysqli_free_result($result);
     mysqli_stmt_close($query);
     return $rows;
 }
