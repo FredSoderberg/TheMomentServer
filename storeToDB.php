@@ -101,27 +101,33 @@ function createRoom(){
 
 /**
  * removes player by id from DB and if room is after empty it will be removed. echoes succes bool.
- * @param $json string in JSON format containing [roomID,playerID]
+ * @param $json string in JSON format containing [roomID,playerID] or just [playerID]
  */
 function removePlayerByID($json) {
     $list = json_decode($json);
-    $roomID = $list[0];
-    $playerID = $list[1];
+    if (count($list) > 1) {
+        $roomID = $list[0];
+        $playerID = $list[1];
+    } else {
+        $playerID = $list[0];
+    }
 
     $connection = db_connect();
     if ($query = mysqli_prepare($connection, "DELETE FROM Player WHERE ID=?")) {
         mysqli_stmt_bind_param($query, "s", $playerID);
         $resultPlayer =  dbQueryRemove($query);
     }
-    if ($query = mysqli_prepare($connection, "SELECT * FROM Player WHERE RoomID=?")) {
-        mysqli_stmt_bind_param($query, "s", $roomID);
-        $playersInRoom =  dbQueryGetResult($query);
+    if (count($list) > 1) {
+        if ($query = mysqli_prepare($connection, "SELECT * FROM Player WHERE RoomID=?")) {
+            mysqli_stmt_bind_param($query, "s", $roomID);
+            $playersInRoom =  dbQueryGetResult($query);
+        }
+        if (count($playersInRoom) == 0) {
+            removeRoomByIDWorker($roomID,$connection);
+        }
     }
 
-    echo count($playersInRoom);
-    if (count($playersInRoom) == 0) {
-        print removeRoomByIDWorker($roomID,$connection);
-    }
+
     mysqli_close($connection);
     //$result = $playersInRoom && $resultPlayer;
     $result = true;
