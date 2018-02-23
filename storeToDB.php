@@ -27,28 +27,44 @@ if(isset($form_action_func))
     }
 }
 
+
+/**
+ * updates database room with new size
+ * @param $json containg roomID and size to set
+ */
 function updateRoomSize($json) {
-    echo $json;
+    $list = json_decode($json,true);
+    $roomID = $list[0];
+    $roomSize = $list[1];
+    $connection = db_connect();
+    setRoomSize($connection,$roomID,$roomSize);
+    mysqli_close($connection);
 }
 
+/**
+ * creates a new player in db, depending on json it also assigns a room to player
+ * @param $json will contain either just a player name or name and room to add to
+ */
 function storePlayer($json) {
     $list = json_decode($json,true);
-    $lenght = count($list);
+    $lenghtOfList = count($list);
     $name = $list[0]['name'];
     $roomID = $list[1];
-    $roomSize = $list[2];
     $connection = db_connect();
     $playerID = storeNewPlayerWorker($connection,$name);
-    if ($lenght === 2) {
+    if ($lenghtOfList === 2) {
         setPlayersRoomID($connection,$playerID,$roomID);
-    }
-    if ($lenght === 3) {
-        setRoomSize($connection,$roomID,$roomSize);
     }
     mysqli_close($connection);
     echo $playerID;
 }
 
+/**
+ * worker function for storing new player in db
+ * @param $connection mysqli, needed for db talk
+ * @param $name string for players name
+ * @return int which is new players id
+ */
 function storeNewPlayerWorker($connection,$name){
     if ($query = mysqli_prepare($connection, "INSERT INTO Player (Name) Values(?)")) {
         mysqli_stmt_bind_param($query, "s", $name);
@@ -58,7 +74,13 @@ function storeNewPlayerWorker($connection,$name){
     }
 }
 
-function setPlayersRoomID($connection,$playerID,$roomID) {
+/**
+ * worker function for setting which room player belongs to
+ * @param $connection mysqli, needed for db talk
+ * @param $playerID int indicating id
+ * @param $roomID int indicating id
+ */
+function setPlayersRoomIDWorker($connection,$playerID,$roomID) {
     if ($query = mysqli_prepare($connection, "UPDATE Player SET RoomID=? WHERE ID=?")) {
         mysqli_stmt_bind_param($query, "ss", $roomID,$playerID);
         dbQuery($query);
@@ -66,7 +88,13 @@ function setPlayersRoomID($connection,$playerID,$roomID) {
     }
 }
 
-function setRoomSize ($connection,$roomID,$roomSize) {
+/**
+ * worker function querying db to change roomsize of a room
+ * @param $connection mysqli, needed for db talk
+ * @param $roomID int indicating id
+ * @param $roomSize int indicating size
+ */
+function setRoomSizeWorker ($connection,$roomID,$roomSize) {
     if ($query = mysqli_prepare($connection, "UPDATE Room SET numOfPlayers=? WHERE ID=?")) {
         mysqli_stmt_bind_param($query, "ss", $$roomSize,$$roomID);
         dbQuery($query);
