@@ -11,7 +11,7 @@ if(isset($form_action_func))
 {
     switch ($form_action_func) {
         case 'getRandomRoom':
-            getRandomRoom();
+            getRandomRoom($json);
             break;
 
         case 'getRoomByID':
@@ -20,37 +20,28 @@ if(isset($form_action_func))
     }
 }
 
-function getRandomRoom() {
-    //TODO add player to random room and confirm it doesnt exced max
-    //echo '{"ID": 1, "numOfPlayers": 1, "playerList": [ {"Player": {"id": 1, "name": "Uffe", "score": 10, "answer": true, "claim": {"claim": "Vi har", "correctAnswer": true }}}]}';
-    echo '{
-  "ID": 10,
-  "numOfPlayers": 1,
-  "playerList": [
-    {
-      "id": 1,
-      "name": "Uffe",
-      "score": 10,
-      "answer": true,
-      "claim": {
-        "claim": "Vi har",
-        "correctAnswer": true
-      },
-      "isPlayer": true
-    },
-    {
-      "id": 2,
-      "name": "Torkel",
-      "score": 3,
-      "answer": true,
-      "claim": {
-        "claim": "Vi har",
-        "correctAnswer": true
-      },
-      "isPlayer": false
+/**
+ * will take player id and try to match it into a room with available slots
+ * @param $json
+ */
+function getRandomRoom($json) {
+    $list = json_decode($json,true);
+    $playerID = $list[0];
+    $connection = db_connect();
+    $availableRooms = getRoomsWithEmptySlots($connection);
+
+
+
+}
+
+function getRoomsWithEmptySlots($connection) {
+    if ($query = mysqli_prepare($connection, "
+                            SELECT a.ID room, count(p.id) players, a.numOfPlayers freeSlots 
+                            FROM Room a LEFT OUTER JOIN Player p ON a.ID = p.RoomID 
+                            group by a.id HAVING count(p.ID) < a.numOfPlayers 
+                            ORDER BY a.numOfPlayers DESC")) {
+        return dbQueryGetResult($query);
     }
-  ]
-}';
 }
 
 
