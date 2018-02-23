@@ -1,6 +1,6 @@
 <?php
 
-require 'dbConnect.php';
+require 'dbConnect.ph';
 
 $form_action_func = $_GET['function'];
 $json = $_GET['jsonobj'];
@@ -49,6 +49,6 @@ function isRoundDone($json) {
  */
 function isServerAndDBUp() {
     //TODO: Actually check if DB is online
-    echo "True";
+    echo "true";
 }
 ?>
