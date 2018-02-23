@@ -30,20 +30,20 @@ if(isset($form_action_func))
 
 /**
  * updates database room with new size
- * @param $json containg roomID and size to set
+ * @param $json string contains roomID and size to set
  */
 function updateRoomSize($json) {
     $list = json_decode($json,true);
     $roomID = $list[0];
     $roomSize = $list[1];
     $connection = db_connect();
-    setRoomSize($connection,$roomID,$roomSize);
+    setRoomSizeWorker($connection,$roomID,$roomSize);
     mysqli_close($connection);
 }
 
 /**
  * creates a new player in db, depending on json it also assigns a room to player
- * @param $json will contain either just a player name or name and room to add to
+ * @param $json string will contain either just a player name or name and room to add to
  */
 function storePlayer($json) {
     $list = json_decode($json,true);
@@ -53,7 +53,7 @@ function storePlayer($json) {
     $connection = db_connect();
     $playerID = storeNewPlayerWorker($connection,$name);
     if ($lenghtOfList === 2) {
-        setPlayersRoomID($connection,$playerID,$roomID);
+        setPlayersRoomIDWorker($connection,$playerID,$roomID);
     }
     mysqli_close($connection);
     echo $playerID;
@@ -130,12 +130,9 @@ function updateRoom($json){
 /**
  * creates a new room in db and returns the ID.
  */
-function createRoom($size){
+function createRoom(){
     $connection = db_connect();
-    /* create a prepared statement */
-    if ($query = mysqli_prepare($connection, "INSERT INTO Room (numOfPlayers) Values(?)")) {
-        /* bind parameters for markers */
-        mysqli_stmt_bind_param($query, "s", $size);
+    if ($query = mysqli_prepare($connection, "INSERT INTO Room () Values()")) {
         $id = dbQueryStoreGetId($query,$connection);
         echo $id;
     }
