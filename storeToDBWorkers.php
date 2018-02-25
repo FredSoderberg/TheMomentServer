@@ -46,8 +46,23 @@ function setRoomSizeWorker ($connection,$roomID,$roomSize) {
 }
 
 function setClaim($connection, $claimID, $theClaim, $corrAnsw) {
-    if ($query = mysqli_prepare($connection, "UPDATE claim SET Claim=?, CorrectAnswer=? WHERE ID=?")) {
+    if ($query = mysqli_prepare($connection, "UPDATE Claim SET Claim=?, CorrectAnswer=? WHERE ID=?")) {
         mysqli_stmt_bind_param($query, "sss", $theClaim, $corrAnsw, $claimID);
+        dbQuery($query);
+    }
+}
+
+function createClaim($connection, $claim, $correctAnswer){
+    if ($query = mysqli_prepare($connection, "INSERT INTO Claim (Claim, CorrectAnswer)VALUES (?, ?)")){
+        mysqli_stmt_bind_param($query, ss,$claim, $correctAnswer);
+        $id = dbQueryStoreGetId($query, $connection);
+        return $id;
+    }
+}
+
+function updatePlayerClaim($connection, $claimID, $playerID){
+    if ($query = mysqli_prepare($connection, "UPDATE Player SET Claim=? WHERE ID=?")) {
+        mysqli_stmt_bind_param($query, "ss", $claimID,$playerID);
         dbQuery($query);
     }
 }

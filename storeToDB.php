@@ -68,44 +68,33 @@ function storePlayer($json) {
 }
 
 
-
-//updatePlayer('[{"answer":false,"claim":{"ID":0,"claim":"Erika fes","correctAnswer":true},"id":0,"isPlayer":true,"name":"Skitungen","round":0,"score":0}]');
-updateClaim('[{"ID":1, "claim":"noooooff","correctAnswer":true}]');
 function updateClaim($json) {
-//Change to take in a claim instead, also change on client side to look if a claim exists, then update otherwise create a new claim.
     $list = json_decode($json, true);
     $list = $list[0];
-    print_r($list['ID']);
-    print_r($list['claim']);
-    print_r($list['correctAnswer']);
     $claimID = $list['ID'];
     $theClaim = $list['claim'];
     $corrAnsw = $list['correctAnswer'];
-    print_r($claimID);
-    print_r($theClaim);
-    print_r($corrAnsw);
 
-    $connection = mysqli_connect('localhost', 'root', 'Skumbanan1', 'themomentdb');
+    $connection = db_connect();
     setClaim($connection, $claimID, $theClaim, $corrAnsw);
         return $claimID;
 }
-   /*  $list = $list[0];
-    print_r($list['name']);
-    print_r($list['claim']['claim']);
-*/
-   /* $list = $list[0];
-    $playerID = $list['id'];
-    $claimToUpdateTo = $list['claim'];
-    $connection = mysqli_connect('localhost', 'root', 'Skumbanan1', 'themomentdb');
-    print_r('hej');
-        if ($query = mysqli_prepare($connection, "UPDATE player SET claim=? WHERE ID=?")) {
-            mysqli_stmt_bind_param($query, 'ss',  $claimToUpdateTo, $playerID);
-            print_r('inne');
-            print_r($playerID);
-            return $playerID;
-        }
-*/
 
+// newClaim('[{"ID":null, "claim":"this is a claim","correctAnswer":true}, {"answer":null,"claim":null,"id":1,"isPlayer":true,"name":"Skitungen","round":0,"score":0}]');
+
+function newClaim($json){
+    $list = json_decode($json, true);
+    $claimList = $list[0];
+    $playerList = $list[1];
+   // print_r($claimList['claim']);
+    //print_r($list[1]['name']);
+    //print_r($playerList['score']);
+   // print_r($playerList['id']);
+   // $connection = mysqli_connect('localhost', 'root', 'Skumbanan1', 'themomentdb');
+    $connection = db_connect();
+    $id = createClaim($connection, $claimList['claim'], $claimList['correctAnswer']);
+    updatePlayerClaim($connection, $id, $playerList['id']);
+}
 
 function updateRoom($json){
 	//TODO, add changes to Room, request room by id and then loop values and if changes are detected insert new value

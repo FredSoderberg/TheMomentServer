@@ -41,7 +41,7 @@ function dbQueryGetResult($query) {
 }
 
 /**
- * fires aquery and returns the resulting ID of the new object
+ * fires a query and returns the resulting ID of the new object
  * @param $query mysqli_stmt send to server
  * @param $connection mysqli needed for returning ID
  * @return int ID
