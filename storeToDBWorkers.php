@@ -45,6 +45,13 @@ function setRoomSizeWorker ($connection,$roomID,$roomSize) {
     }
 }
 
+function setClaim($connection, $claimID, $theClaim, $corrAnsw) {
+    if ($query = mysqli_prepare($connection, "UPDATE claim SET Claim=?, CorrectAnswer=? WHERE ID=?")) {
+        mysqli_stmt_bind_param($query, "sss", $theClaim, $corrAnsw, $claimID);
+        dbQuery($query);
+    }
+}
+
 /**
  * Removes the room with id roomID from DB
  * @param $roomID string to query with
@@ -56,5 +63,4 @@ function removeRoomByIDWorker($roomID,$connection) {
         mysqli_stmt_bind_param($query, "s", $roomID);
         return dbQueryRemove($query);
     }
-
 }

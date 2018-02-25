@@ -1,4 +1,5 @@
 <?php
+
 require 'dbConnect.php';
 require 'storeToDBWorkers.php';
 require 'getFromDBWorkers.php';
@@ -70,9 +71,7 @@ function storePlayer($json) {
 
 //updatePlayer('[{"answer":false,"claim":{"ID":0,"claim":"Erika fes","correctAnswer":true},"id":0,"isPlayer":true,"name":"Skitungen","round":0,"score":0}]');
 updateClaim('[{"ID":1, "claim":"noooooff","correctAnswer":true}]');
-
-function updateClaim($json)
-{
+function updateClaim($json) {
 //Change to take in a claim instead, also change on client side to look if a claim exists, then update otherwise create a new claim.
     $list = json_decode($json, true);
     $list = $list[0];
@@ -87,10 +86,8 @@ function updateClaim($json)
     print_r($corrAnsw);
 
     $connection = mysqli_connect('localhost', 'root', 'Skumbanan1', 'themomentdb');
-    if ($query = mysqli_prepare($connection, "UPDATE claim SET Claim=?, CorrectAnswer=? WHERE ID=?")) {
-        mysqli_stmt_bind_param($query, "sss", $theClaim, $corrAnsw, $claimID);
+    setClaim($connection, $claimID, $theClaim, $corrAnsw);
         return $claimID;
-    }
 }
    /*  $list = $list[0];
     print_r($list['name']);
@@ -180,18 +177,4 @@ function removePlayerByID($json) {
     $result = true;
     //TODO FIX IF FAIL!
     echo $result;
-}
-
-/**
- * Removes the room with id roomID from DB
- * @param $roomID string to query with
- * @param $connection mysqli, needed for db talk
- * @return bool if success or not
- */
-function removeRoomByIDWorker($roomID,$connection) {
-    if ($query = mysqli_prepare($connection, "DELETE FROM Room WHERE ID=?")) {
-        mysqli_stmt_bind_param($query, "s", $roomID);
-        return dbQueryRemove($query);
-    }
-
 }

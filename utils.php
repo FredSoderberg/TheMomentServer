@@ -1,6 +1,6 @@
 <?php
 
-require 'dbConnect.ph';
+require 'dbConnect.php';
 
 $form_action_func = $_GET['function'];
 $json = $_GET['jsonobj'];
