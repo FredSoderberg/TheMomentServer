@@ -67,6 +67,11 @@ function storePlayer($json) {
     echo $playerID;
 }
 
+/**
+ * Updates a claim in DB
+ * @param $json string will contain the claim
+ * @return the claims ID
+ */
 
 function updateClaim($json) {
     $list = json_decode($json, true);
@@ -79,6 +84,11 @@ function updateClaim($json) {
     setClaim($connection, $claimID, $theClaim, $corrAnsw);
         return $claimID;
 }
+
+/**
+ * Creates a new claim and connects it with the player who wrote it
+ * @param $json string will contain the claim to create and the player that wrote it
+ */
 
 // newClaim('[{"ID":null, "claim":"this is a claim","correctAnswer":true}, {"answer":null,"claim":null,"id":1,"isPlayer":true,"name":"Skitungen","round":0,"score":0}]');
 
@@ -94,6 +104,19 @@ function newClaim($json){
     $connection = db_connect();
     $id = createClaim($connection, $claimList['claim'], $claimList['correctAnswer']);
     updatePlayerClaim($connection, $id, $playerList['id']);
+}
+
+/**
+ * Updates a players score
+ * @param $json string will contain player ID and the players new score
+ */
+function updatePlayerScore($json){
+    $list = json_decode($json);
+    $playerID = $list[0];
+    $newScore = $list[1];
+    $connection = db_connect();
+    updateScore($connection, $playerID, $newScore);
+
 }
 
 function updateRoom($json){
