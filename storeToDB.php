@@ -104,6 +104,7 @@ function newClaim($json){
     $connection = db_connect();
     $id = createClaim($connection, $claimList['claim'], $claimList['correctAnswer']);
     updatePlayerClaim($connection, $id, $playerList['id']);
+    return id;
 }
 
 /**
