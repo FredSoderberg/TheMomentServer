@@ -70,7 +70,7 @@ function setClaim($connection, $claimID, $theClaim, $corrAnsw) {
 
 function createClaim($connection, $claim, $correctAnswer){
     if ($query = mysqli_prepare($connection, "INSERT INTO Claim (Claim, CorrectAnswer)VALUES (?, ?)")){
-        mysqli_stmt_bind_param($query, ss,$claim, $correctAnswer);
+        mysqli_stmt_bind_param($query, "ss",$claim, $correctAnswer);
         $id = dbQueryStoreGetId($query, $connection);
         return $id;
     }
