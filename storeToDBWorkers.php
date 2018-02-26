@@ -67,7 +67,13 @@ function setClaim($connection, $claimID, $theClaim, $corrAnsw) {
  * @return int the id of the new created claim
  */
 function createClaim($connection, $claim, $correctAnswer){
-    if ($query = mysqli_prepare($connection, "INSERT INTO claim (Claim, CorrectAnswer)VALUES (?, ?)")){
+    if ($correctAnswer == 1){
+
+    }
+    else {
+        $correctAnswer = 0;
+    }
+    if ($query = mysqli_prepare($connection, "INSERT INTO Claim (Claim, CorrectAnswer)VALUES (?, ?)")){
         mysqli_stmt_bind_param($query, "ss",$claim, $correctAnswer);
         $id = dbQueryStoreGetId($query, $connection);
         return $id;

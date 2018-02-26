@@ -103,8 +103,8 @@ function newClaim($json){
     print_r($claimList['claim']);
     print_r($claimList['correctAnswer']);
     print_r($playerList['id']);
-    $connection = mysqli_connect('localhost', 'root', 'Skumbanan1', 'themomentdb');
-    //$connection = db_connect();
+    //$connection = mysqli_connect('localhost', 'root', 'Skumbanan1', 'themomentdb');
+    $connection = db_connect();
     $id = createClaim($connection, $claimList['claim'], $claimList['correctAnswer']);
     updatePlayerClaim($connection, $id, $playerList['id']);
     return id;
