@@ -19,6 +19,9 @@ if(isset($form_action_func))
         case 'getRoomByID':
             getRoomByID($json);
             break;
+        case 'getFreeRoom':
+            getFreeRoom($json);
+            break;
     }
 }
 
@@ -69,4 +72,29 @@ function getClaimByID($claimID) {
     $claim = getClaimByIDWorker($claimID,$connection);
     mysqli_close($connection);
     echo json_encode($claim);
+}
+
+
+/**
+ * The function will check is current room wished to join exist
+ * and if it have a place over for the player
+ * @param $json string contain roomID and playerID
+ * @return string in json format containing the room object
+ */
+function getFreeRoom($json){
+    $list = json_decode($json);
+    $roomID = $list[0];
+    $playerID = $list[1];
+
+    $connection = db_connect();
+    $room = getRoomByIDWorker($roomID, $connection);
+    if (!is_null($room)) {
+        if (!isRoomToFullWorker($connection, $roomID)) {
+            setPlayersRoomIDWorker($connection, $playerID, $roomID);
+            echo json_encode($room, $connection);
+            return;
+        }
+    }
+    echo false;
+    return;
 }
