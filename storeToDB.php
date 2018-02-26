@@ -1,3 +1,4 @@
+
 <?php
 
 require 'dbConnect.php';
@@ -90,18 +91,19 @@ function updateClaim($json) {
  * @param $json string will contain the claim to create and the player that wrote it
  */
 
-// newClaim('[{"ID":null, "claim":"this is a claim","correctAnswer":true}, {"answer":null,"claim":null,"id":1,"isPlayer":true,"name":"Skitungen","round":0,"score":0}]');
+ newClaim('[{"ID":null, "claim":"try","correctAnswer":false}, {"answer":null,"claim":null,"id":1,"isPlayer":true,"name":"Skitungen","round":0,"score":0}]');
+//newClaim('[{"ID":0,"claim":"nej","correctAnswer":false},{"answer":false,"claim":{"ID":0,"claim":"nej","correctAnswer":false},"id":22,"isPlayer":true,"name":"ewfsvd","round":0,"score":0}]');
 
+//TODO: Fix when a claim has answer false
 function newClaim($json){
     $list = json_decode($json, true);
     $claimList = $list[0];
     $playerList = $list[1];
-   // print_r($claimList['claim']);
-    //print_r($list[1]['name']);
-    //print_r($playerList['score']);
-   // print_r($playerList['id']);
-   // $connection = mysqli_connect('localhost', 'root', 'Skumbanan1', 'themomentdb');
-    $connection = db_connect();
+    print_r($claimList['claim']);
+    print_r($claimList['correctAnswer']);
+    print_r($playerList['id']);
+    $connection = mysqli_connect('localhost', 'root', 'Skumbanan1', 'themomentdb');
+    //$connection = db_connect();
     $id = createClaim($connection, $claimList['claim'], $claimList['correctAnswer']);
     updatePlayerClaim($connection, $id, $playerList['id']);
     return id;
