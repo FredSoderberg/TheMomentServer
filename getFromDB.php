@@ -3,6 +3,8 @@
 header('Content-Type: application/json');
 
 require 'dbConnect.php';
+require 'storeToDBWorkers.php';
+require 'getFromDBWorkers.php';
 
 $form_action_func = $_GET['function'];
 $json = $_GET['jsonobj'];
@@ -11,48 +13,43 @@ if(isset($form_action_func))
 {
     switch ($form_action_func) {
         case 'getRandomRoom':
-            getRandomRoom();
+            getRandomRoom($json);
             break;
 
         case 'getRoomByID':
             getRoomByID($json);
             break;
+
+        case 'getFreeRoom':
+            getFreeRoom($json);
+            break;
     }
 }
 
-function getRandomRoom() {
-    //TODO add player to random room and confirm it doesnt exced max
-    //echo '{"ID": 1, "numOfPlayers": 1, "playerList": [ {"Player": {"id": 1, "name": "Uffe", "score": 10, "answer": true, "claim": {"claim": "Vi har", "correctAnswer": true }}}]}';
-    echo '{
-  "ID": 10,
-  "numOfPlayers": 1,
-  "playerList": [
-    {
-      "id": 1,
-      "name": "Uffe",
-      "score": 10,
-      "answer": true,
-      "claim": {
-        "claim": "Vi har",
-        "correctAnswer": true
-      },
-      "isPlayer": true
-    },
-    {
-      "id": 2,
-      "name": "Torkel",
-      "score": 3,
-      "answer": true,
-      "claim": {
-        "claim": "Vi har",
-        "correctAnswer": true
-      },
-      "isPlayer": false
+/**
+ * will take player id and try to match it into a room with available slots
+ * @param $json string containing player id in json form
+ */
+function getRandomRoom($json) {
+    $list = json_decode($json);
+    $playerID = $list[0];
+    $connection = db_connect();
+    $availableRooms = getRoomsWithEmptySlotsWorker($connection);
+    if (!count($availableRooms)) {
+        echo false;
+        return;
     }
-  ]
-}';
-}
+    $randRoom = array_rand($availableRooms);
+    $roomID = $availableRooms[$randRoom]['ID'];
 
+    setPlayersRoomIDWorker($connection,$playerID,$roomID);
+    if (!isRoomToFullWorker($connection,$roomID)) {
+        echo json_encode(getRoomByIDWorker($roomID,$connection));
+    } else {
+        //Ugly way of doing it
+        getRandomRoom($json);
+    }
+}
 
 /**
  * Collects the complete room by id from the DB.
@@ -67,37 +64,8 @@ function getRoomByID($roomID) {
 }
 
 /**
- * The worker process for getting the room in array form
- * @param $roomID int, is the id of the room to get
- * @param $connection mysqli, needed for db talk
- * @return array which contains an array of arrays representing the room
- */
-function getRoomByIDWorker($roomID, $connection) {
-    if ($query = mysqli_prepare($connection, "SELECT * FROM Room WHERE ID=?")) {
-        mysqli_stmt_bind_param($query, "i", $roomID);
-        $room = dbQueryGetResult($query);
-        $room = $room[0];
-    }
-    if ($query = mysqli_prepare($connection, "SELECT * FROM Player WHERE RoomID=?")) {
-        mysqli_stmt_bind_param($query, "i", $roomID);
-        $playerRows = dbQueryGetResult($query);
-    }
-    $playerList = [];
-    foreach ($playerRows as $row) {
-        unset($row['RoomID']);
-        $claim = getClaimByIDWorker($row['Claim'],$connection);
-        $claim = $claim[0];
-        $row['Claim'] = $claim;
-        $playerList[] = $row;
-    }
-    $room['playerList'] = $playerList;
-    mysqli_close($connection);
-    return $room;
-}
-
-/**
  * The function being called to get the claim and will echo in JSON format
- * @param $claimID mysqli, the unique id to search with.
+ * @param $claimID int, the unique id to search with.
  * @room json formatted claim
  */
 function getClaimByID($claimID) {
@@ -107,15 +75,29 @@ function getClaimByID($claimID) {
     echo json_encode($claim);
 }
 
+
 /**
- * The worker process for getting the claim in array form
- * @param $claimID int the id to be searched with, unique
- * @param $connection mysqli, for db talk
- * @return array which contains claim
+ * The function will check is current room wished to join exist
+ * and if it have a place over for the player
+ * @param $json string contain roomID and playerID
+ * @return string in json format containing the room object
  */
-function getClaimByIDWorker($claimID, $connection) {
-    if ($query = mysqli_prepare($connection, "SELECT * FROM Claim WHERE ID=?")) {
-        mysqli_stmt_bind_param($query, "i", $claimID);
-        return dbQueryGetResult($query);
+function getFreeRoom($json){
+    $list = json_decode($json);
+    $roomID = $list[0];
+    $playerID = $list[1];
+
+    $connection = db_connect();
+    $room = getRoomByIDWorker($roomID, $connection);
+    if (!is_null($room)) {
+        if (!isRoomToFullWorker($connection, $roomID)) {
+            setPlayersRoomIDWorker($connection, $playerID, $roomID);
+            echo json_encode($room);
+            mysqli_close($connection);
+            return;
+        }
     }
+    echo false;
+    mysqli_close($connection);
+    return;
 }

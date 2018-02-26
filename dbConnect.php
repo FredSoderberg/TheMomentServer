@@ -35,12 +35,13 @@ function dbQueryGetResult($query) {
     while ($row = mysqli_fetch_array($result, MYSQLI_ASSOC)) {
         $rows[] = $row;
     }
+    //mysqli_free_result($result);
     mysqli_stmt_close($query);
     return $rows;
 }
 
 /**
- * fires aquery and returns the resulting ID of the new object
+ * fires a query and returns the resulting ID of the new object
  * @param $query mysqli_stmt send to server
  * @param $connection mysqli needed for returning ID
  * @return int ID
@@ -61,5 +62,14 @@ function dbQueryStoreGetId($query,$connection) {
  * @return bool if success or not
  */
 function dbQueryRemove($query) {
+    return mysqli_stmt_execute($query);
+}
+
+/**
+ * Send query to DB. Used if no response more then operational succes is needed
+ * @param $query mysqli_stmt to send to db
+ * @return bool success or failure
+ */
+function dbQuery($query) {
     return mysqli_stmt_execute($query);
 }
