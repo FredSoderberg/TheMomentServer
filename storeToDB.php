@@ -48,6 +48,7 @@ function updateRoomSize($json) {
     $connection = db_connect();
     setRoomSizeWorker($connection,$roomID,$roomSize);
     mysqli_close($connection);
+    echo true;
 }
 
 /**
@@ -125,26 +126,6 @@ function updatePlayerScore($json){
 function updateRoom($json){
 	//TODO, add changes to Room, request room by id and then loop values and if changes are detected insert new value
     //TODO probably gonna need a help function to handle players and claims.
-    //dont return a room!
-    /*
-	echo '{
-  "ID": 10,
-  "numOfPlayers": 1,
-  "playerList": [
-    {
-      "id": 1,
-      "name": "Uffe",
-      "score": 10,
-      "answer": true,
-      "claim": {
-        "claim": "Vi har",
-        "correctAnswer": true
-      },
-      "isPlayer": true
-    }    
-  ]
-}';
-    */
 }
 
 /**
