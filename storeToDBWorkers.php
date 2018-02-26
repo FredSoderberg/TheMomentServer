@@ -39,7 +39,7 @@ function setPlayersRoomIDWorker($connection,$playerID,$roomID) {
  */
 function setRoomSizeWorker ($connection,$roomID,$roomSize) {
     if ($query = mysqli_prepare($connection, "UPDATE Room SET numOfPlayers=? WHERE ID=?")) {
-        mysqli_stmt_bind_param($query, "ss", $$roomSize,$$roomID);
+        mysqli_stmt_bind_param($query, "ss", $roomSize,$roomID);
         dbQuery($query);
         //TODO Guard for db failure
     }
