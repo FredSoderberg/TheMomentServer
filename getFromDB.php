@@ -19,6 +19,7 @@ if(isset($form_action_func))
         case 'getRoomByID':
             getRoomByID($json);
             break;
+
         case 'getFreeRoom':
             getFreeRoom($json);
             break;
@@ -91,7 +92,7 @@ function getFreeRoom($json){
     if (!is_null($room)) {
         if (!isRoomToFullWorker($connection, $roomID)) {
             setPlayersRoomIDWorker($connection, $playerID, $roomID);
-            echo json_encode($room, $connection);
+            echo json_encode($room);
             return;
         }
     }
