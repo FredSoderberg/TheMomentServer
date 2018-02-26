@@ -24,7 +24,7 @@ function storeNewPlayerWorker($connection,$name){
  * @param $roomID int indicating id
  */
 function setPlayersRoomIDWorker($connection,$playerID,$roomID) {
-    if ($query = mysqli_prepare($connection, "UPDATE Room SET RoomID=? WHERE ID=?")) {
+    if ($query = mysqli_prepare($connection, "UPDATE Player SET RoomID=? WHERE ID=?")) {
         mysqli_stmt_bind_param($query, "ss", $roomID,$playerID);
         dbQuery($query);
         //TODO Guard for db failure
