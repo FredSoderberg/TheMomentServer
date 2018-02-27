@@ -52,7 +52,7 @@ function setRoomSizeWorker ($connection,$roomID,$roomSize) {
  * @param $theClaim the phrase that should be changed
  * @param $corrAnsw updates the correct answer to suit the new claim
  */
-function setClaim($connection, $claimID, $theClaim, $corrAnsw) {
+function setClaimWorker($connection, $claimID, $theClaim, $corrAnsw) {
     if ($query = mysqli_prepare($connection, "UPDATE Claim SET Claim=?, CorrectAnswer=? WHERE ID=?")) {
         mysqli_stmt_bind_param($query, "sss", $theClaim, $corrAnsw, $claimID);
         dbQuery($query);
@@ -66,7 +66,7 @@ function setClaim($connection, $claimID, $theClaim, $corrAnsw) {
  * @param $correctAnswer the correct answer of the claim
  * @return int the id of the new created claim
  */
-function createClaim($connection, $claim, $correctAnswer){
+function createClaimWorker($connection, $claim, $correctAnswer){
     if ($correctAnswer == 1){
 
     }
@@ -87,7 +87,7 @@ function createClaim($connection, $claim, $correctAnswer){
  * @param $playerID the ID belonging to the player thats claim should be updated
  */
 
-function updatePlayerClaim($connection, $claimID, $playerID){
+function updatePlayerClaimWorker($connection, $claimID, $playerID){
     if ($query = mysqli_prepare($connection, "UPDATE Player SET Claim=? WHERE ID=?")) {
         mysqli_stmt_bind_param($query, "ss", $claimID,$playerID);
         dbQuery($query);
@@ -101,7 +101,7 @@ function updatePlayerClaim($connection, $claimID, $playerID){
  * @param $newScore the players new score that the DB should be updated with
  */
 
-function updateScore($connection, $playerID, $newScore){
+function updateScoreWorker($connection, $playerID, $newScore){
     if ($query = mysqli_prepare($connection, "UPDATE Player SET Score=? WHERE ID=?")) {
         mysqli_stmt_bind_param($query, "ss", $newScore,$playerID);
         dbQuery($query);
