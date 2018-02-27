@@ -23,6 +23,9 @@ if(isset($form_action_func))
         case 'getFreeRoom':
             getFreeRoom($json);
             break;
+        case 'getClaimByID':
+            getClaimByID($json);
+            break;
     }
 }
 

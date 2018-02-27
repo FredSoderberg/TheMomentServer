@@ -78,9 +78,8 @@ function storePlayer($json) {
 }
 
 /**
- * Updates a claim in DB
+ * Updates a claim in DB, echoes id
  * @param $json string will contain the claim
- * @return the claims ID
  */
 
 function updateClaim($json) {
