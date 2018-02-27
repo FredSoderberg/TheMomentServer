@@ -90,7 +90,11 @@ function getFreeRoom($json){
         if (!isRoomToFullWorker($connection, $roomID)) {
             setPlayersRoomIDWorker($connection, $playerID, $roomID);
             $room = getRoomByIDWorker($roomID, $connection);
-            echo json_encode($room);
+            if($room === NULL) {
+                echo false;
+            } else {
+                echo json_encode($room);
+            }
             mysqli_close($connection);
             return;
         }
