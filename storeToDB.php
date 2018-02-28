@@ -31,8 +31,16 @@ if(isset($form_action_func))
         case 'removePlayerByID':
             removePlayerByID($json);
             break;
-        case 'updatePlayer' :
-            updatePlayer($json);
+        case 'updatePlayerScore' :
+            updatePlayerScore($json);
+            break;
+        case 'updateClaim' :
+            updateClaim($json);
+            break;
+        case 'newClaim' :
+            newClaim($json);
+            break;
+
     }
 }
 
@@ -70,9 +78,8 @@ function storePlayer($json) {
 }
 
 /**
- * Updates a claim in DB
+ * Updates a claim in DB, echoes id
  * @param $json string will contain the claim
- * @return the claims ID
  */
 
 function updateClaim($json) {
@@ -83,31 +90,22 @@ function updateClaim($json) {
     $corrAnsw = $list['correctAnswer'];
 
     $connection = db_connect();
-    setClaim($connection, $claimID, $theClaim, $corrAnsw);
-        return $claimID;
+    setClaimWorker($connection, $claimID, $theClaim, $corrAnsw);
+    echo $claimID;
 }
 
 /**
  * Creates a new claim and connects it with the player who wrote it
  * @param $json string will contain the claim to create and the player that wrote it
  */
-
-//newClaim('[{"ID":null, "claim":"try","correctAnswer":false}, {"answer":null,"claim":null,"id":1,"isPlayer":true,"name":"Skitungen","round":0,"score":0}]');
-//newClaim('[{"ID":0,"claim":"nej","correctAnswer":false},{"answer":false,"claim":{"ID":0,"claim":"nej","correctAnswer":false},"id":22,"isPlayer":true,"name":"ewfsvd","round":0,"score":0}]');
-
-//TODO: Fix when a claim has answer false
 function newClaim($json){
     $list = json_decode($json, true);
     $claimList = $list[0];
-    $playerList = $list[1];
-   // print_r($claimList['claim']);
-    //print_r($claimList['correctAnswer']);
-    //print_r($playerList['id']);
-    //$connection = mysqli_connect('localhost', 'root', 'Skumbanan1', 'themomentdb');
+    $player = $list[1];
     $connection = db_connect();
-    $id = createClaim($connection, $claimList['claim'], $claimList['correctAnswer']);
-    updatePlayerClaim($connection, $id, $playerList['id']);
-    return id;
+    $id = createClaimWorker($connection, $claimList['claim'], $claimList['correctAnswer']);
+    updatePlayerClaimWorker($connection, $id, $player['id']);
+    echo $id;
 }
 
 /**
@@ -119,7 +117,7 @@ function updatePlayerScore($json){
     $playerID = $list[0];
     $newScore = $list[1];
     $connection = db_connect();
-    updateScore($connection, $playerID, $newScore);
+    updateScoreWorker($connection, $playerID, $newScore);
 
 }
 

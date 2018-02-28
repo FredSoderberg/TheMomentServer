@@ -27,6 +27,9 @@ function getRoomByIDWorker($roomID, $connection) {
         mysqli_stmt_bind_param($query, "i", $roomID);
         $room = dbQueryGetResult($query);
         $room = $room[0];
+        if ($room === NULL) {
+            return NULL;
+        }
     }
     if ($query = mysqli_prepare($connection, "SELECT * FROM Player WHERE RoomID=?")) {
         mysqli_stmt_bind_param($query, "i", $roomID);
