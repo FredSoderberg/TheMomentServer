@@ -40,6 +40,8 @@ function getRoomByIDWorker($roomID, $connection) {
         unset($row['RoomID']);
         $claim = getClaimByIDWorker($row['Claim'],$connection);
         $claim = $claim[0];
+        $claim['CorrectAnswer'] = (bool)$claim['CorrectAnswer'];
+        $row['answer'] = (bool)$row['answer'];
         $row['Claim'] = $claim;
         $playerList[] = $row;
     }
