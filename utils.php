@@ -37,11 +37,11 @@ function isRoundDone($json) {
 
     foreach ($rows as $row) {
         if ($row['Round'] < $roundNo) {
-            echo 0;
+            echo false;
             return;
         }
     }
-    echo 1;
+    echo true;
 }
 
 /**
