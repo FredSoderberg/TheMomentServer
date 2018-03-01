@@ -43,7 +43,7 @@ function getRandomRoom($json) {
         return;
     }
     $randRoom = array_rand($availableRooms);
-    $roomID = $availableRooms[$randRoom]['ID'];
+    $roomID = $availableRooms[$randRoom]['id'];
 
     setPlayersRoomIDWorker($connection,$playerID,$roomID);
     if (!isRoomToFullWorker($connection,$roomID)) {

@@ -85,7 +85,7 @@ function storePlayer($json) {
 function updateClaim($json) {
     $list = json_decode($json, true);
     $list = $list[0];
-    $claimID = $list['ID'];
+    $claimID = $list['id'];
     $theClaim = $list['claim'];
     $corrAnsw = $list['correctAnswer'];
 
@@ -151,12 +151,12 @@ function removePlayerByID($json) {
     }
 
     $connection = db_connect();
-    if ($query = mysqli_prepare($connection, "DELETE FROM Player WHERE ID=?")) {
+    if ($query = mysqli_prepare($connection, "DELETE FROM Player WHERE id=?")) {
         mysqli_stmt_bind_param($query, "s", $playerID);
         $resultPlayer =  dbQueryRemove($query);
     }
     if (count($list) > 1) {
-        if ($query = mysqli_prepare($connection, "SELECT * FROM Player WHERE RoomID=?")) {
+        if ($query = mysqli_prepare($connection, "SELECT * FROM Player WHERE roomID=?")) {
             mysqli_stmt_bind_param($query, "s", $roomID);
             $playersInRoom =  dbQueryGetResult($query);
         }
