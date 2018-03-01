@@ -48,7 +48,10 @@ function isRoundDone($json) {
  * A simple function that checks if the servers db is up.
  */
 function isServerAndDBUp() {
-    //TODO: Actually check if DB is online
-    echo "True";
+    if(db_connect()) {
+        echo true;
+        return;
+    }
+    echo false;
 }
 ?>
