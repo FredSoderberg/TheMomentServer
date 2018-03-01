@@ -48,7 +48,9 @@ function isRoundDone($json) {
  * A simple function that checks if the servers db is up.
  */
 function isServerAndDBUp() {
-    if(db_connect()) {
+    $config = parse_ini_file('../dbConnection/config.ini');
+    $connection = mysqli_connect('localhost:3306',$config['username'],$config['password'],$config['dbname']);
+    if($connection) {
         echo true;
         return;
     }
