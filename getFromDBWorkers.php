@@ -37,12 +37,12 @@ function getRoomByIDWorker($roomID, $connection) {
     }
     $playerList = [];
     foreach ($playerRows as $row) {
-        unset($row['RoomID']);
-        $claim = getClaimByIDWorker($row['Claim'],$connection);
+        unset($row['roomID']);
+        $claim = getClaimByIDWorker($row['claim'],$connection);
         $claim = $claim[0];
-        $claim['CorrectAnswer'] = (bool)$claim['CorrectAnswer'];
+        $claim['correctAnswer'] = (bool)$claim['correctAnswer'];
         $row['answer'] = (bool)$row['answer'];
-        $row['Claim'] = $claim;
+        $row['claim'] = $claim;
         $playerList[] = $row;
     }
     $room['playerList'] = $playerList;
