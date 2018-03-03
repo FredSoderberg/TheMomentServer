@@ -67,10 +67,7 @@ function setClaimWorker($connection, $claimID, $theClaim, $corrAnsw) {
  * @return int the id of the new created claim
  */
 function createClaimWorker($connection, $claim, $correctAnswer){
-    if ($correctAnswer == 1){
-
-    }
-    else {
+    if ($correctAnswer != 1){
         $correctAnswer = 0;
     }
     if ($query = mysqli_prepare($connection, "INSERT INTO Claim (claim, correctAnswer)VALUES (?, ?)")){
