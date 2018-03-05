@@ -85,7 +85,6 @@ function getClaimByID($claimID) {
  * @param $json string contain roomID and playerID
  * @return string in json format containing the room object
  */
-getFreeRoom("[1,3]");
 function getFreeRoom($json){
     $list = json_decode($json);
     $roomID = $list[0];
