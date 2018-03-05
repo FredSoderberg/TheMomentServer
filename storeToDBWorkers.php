@@ -18,6 +18,20 @@ function storeNewPlayerWorker($connection,$name){
 }
 
 /**
+ * worker function for setting which round player currently is on
+ * @param $connection mysqli, needed for db talk
+ * @param $playerID int indicating id
+ * @param $round int indicating round
+ */
+function setPlayersRoundWorker($connection, $playerID, $round){
+    if($query = mysqli_prepare($connection, "UPDATE Player SET round=? WHERE id=?")) {
+        mysqli_stmt_bind_param($query, "ss", $round,$playerID);
+        dbQuery($query);
+    }
+
+}
+
+/**
  * worker function for setting which room player belongs to
  * @param $connection mysqli, needed for db talk
  * @param $playerID int indicating id
