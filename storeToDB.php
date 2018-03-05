@@ -40,6 +40,9 @@ if(isset($form_action_func))
         case 'newClaim' :
             newClaim($json);
             break;
+        case 'storePlayerRound':
+            storePlayerRound($json);
+            break;
 
     }
 }
@@ -57,6 +60,18 @@ function updateRoomSize($json) {
     setRoomSizeWorker($connection,$roomID,$roomSize);
     mysqli_close($connection);
     echo true;
+}
+
+
+function storePlayerRound($json){
+    $list = json_decode($json,true);
+    $list = $list[0];
+    $playerId = $list['id'];
+    $playerRound = $list['round'];
+    $connection = db_connect();
+
+    setPlayersRoundWorker($connection,$playerId,$playerRound);
+    echo $playerRound;
 }
 
 /**
