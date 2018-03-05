@@ -9,12 +9,26 @@
  * @return int which is new players id
  */
 function storeNewPlayerWorker($connection,$name){
-    if ($query = mysqli_prepare($connection, "INSERT INTO Player (Name) Values(?)")) {
+    if ($query = mysqli_prepare($connection, "INSERT INTO Player (name) Values(?)")) {
         mysqli_stmt_bind_param($query, "s", $name);
         $id = dbQueryStoreGetId($query,$connection);
         //TODO Guard for db failure
         return $id;
     }
+}
+
+/**
+ * worker function for setting which round player currently is on
+ * @param $connection mysqli, needed for db talk
+ * @param $playerID int indicating id
+ * @param $round int indicating round
+ */
+function setPlayersRoundWorker($connection, $playerID, $round){
+    if($query = mysqli_prepare($connection, "UPDATE Player SET round=? WHERE id=?")) {
+        mysqli_stmt_bind_param($query, "ss", $round,$playerID);
+        dbQuery($query);
+    }
+
 }
 
 /**
@@ -24,7 +38,7 @@ function storeNewPlayerWorker($connection,$name){
  * @param $roomID int indicating id
  */
 function setPlayersRoomIDWorker($connection,$playerID,$roomID) {
-    if ($query = mysqli_prepare($connection, "UPDATE Player SET RoomID=? WHERE ID=?")) {
+    if ($query = mysqli_prepare($connection, "UPDATE Player SET roomID=? WHERE id=?")) {
         mysqli_stmt_bind_param($query, "ss", $roomID,$playerID);
         dbQuery($query);
         //TODO Guard for db failure
@@ -38,7 +52,7 @@ function setPlayersRoomIDWorker($connection,$playerID,$roomID) {
  * @param $roomSize int indicating size
  */
 function setRoomSizeWorker ($connection,$roomID,$roomSize) {
-    if ($query = mysqli_prepare($connection, "UPDATE Room SET numOfPlayers=? WHERE ID=?")) {
+    if ($query = mysqli_prepare($connection, "UPDATE Room SET numOfPlayers=? WHERE id=?")) {
         mysqli_stmt_bind_param($query, "ss", $roomSize,$roomID);
         dbQuery($query);
         //TODO Guard for db failure
@@ -53,7 +67,7 @@ function setRoomSizeWorker ($connection,$roomID,$roomSize) {
  * @param $corrAnsw updates the correct answer to suit the new claim
  */
 function setClaimWorker($connection, $claimID, $theClaim, $corrAnsw) {
-    if ($query = mysqli_prepare($connection, "UPDATE Claim SET Claim=?, CorrectAnswer=? WHERE ID=?")) {
+    if ($query = mysqli_prepare($connection, "UPDATE Claim SET claim=?, correctAnswer=? WHERE id=?")) {
         mysqli_stmt_bind_param($query, "sss", $theClaim, $corrAnsw, $claimID);
         dbQuery($query);
     }
@@ -73,7 +87,7 @@ function createClaimWorker($connection, $claim, $correctAnswer){
     else {
         $correctAnswer = 0;
     }
-    if ($query = mysqli_prepare($connection, "INSERT INTO Claim (Claim, CorrectAnswer)VALUES (?, ?)")){
+    if ($query = mysqli_prepare($connection, "INSERT INTO Claim (claim, correctAnswer)VALUES (?, ?)")){
         mysqli_stmt_bind_param($query, "ss",$claim, $correctAnswer);
         $id = dbQueryStoreGetId($query, $connection);
         return $id;
@@ -88,7 +102,7 @@ function createClaimWorker($connection, $claim, $correctAnswer){
  */
 
 function updatePlayerClaimWorker($connection, $claimID, $playerID){
-    if ($query = mysqli_prepare($connection, "UPDATE Player SET Claim=? WHERE ID=?")) {
+    if ($query = mysqli_prepare($connection, "UPDATE Player SET claim=? WHERE id=?")) {
         mysqli_stmt_bind_param($query, "ss", $claimID,$playerID);
         dbQuery($query);
     }
@@ -102,7 +116,7 @@ function updatePlayerClaimWorker($connection, $claimID, $playerID){
  */
 
 function updateScoreWorker($connection, $playerID, $newScore){
-    if ($query = mysqli_prepare($connection, "UPDATE Player SET Score=? WHERE ID=?")) {
+    if ($query = mysqli_prepare($connection, "UPDATE Player SET score=? WHERE id=?")) {
         mysqli_stmt_bind_param($query, "ss", $newScore,$playerID);
         dbQuery($query);
     }
@@ -115,7 +129,7 @@ function updateScoreWorker($connection, $playerID, $newScore){
  * @return bool if success or not
  */
 function removeRoomByIDWorker($roomID,$connection) {
-    if ($query = mysqli_prepare($connection, "DELETE FROM Room WHERE ID=?")) {
+    if ($query = mysqli_prepare($connection, "DELETE FROM Room WHERE id=?")) {
         mysqli_stmt_bind_param($query, "s", $roomID);
         return dbQueryRemove($query);
     }

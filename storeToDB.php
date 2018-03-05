@@ -40,6 +40,9 @@ if(isset($form_action_func))
         case 'newClaim' :
             newClaim($json);
             break;
+        case 'storePlayerRound':
+            storePlayerRound($json);
+            break;
 
     }
 }
@@ -57,6 +60,18 @@ function updateRoomSize($json) {
     setRoomSizeWorker($connection,$roomID,$roomSize);
     mysqli_close($connection);
     echo true;
+}
+
+
+function storePlayerRound($json){
+    $list = json_decode($json,true);
+    $list = $list[0];
+    $playerId = $list['id'];
+    $playerRound = $list['round'];
+    $connection = db_connect();
+
+    setPlayersRoundWorker($connection,$playerId,$playerRound);
+    echo $playerRound;
 }
 
 /**
@@ -85,7 +100,7 @@ function storePlayer($json) {
 function updateClaim($json) {
     $list = json_decode($json, true);
     $list = $list[0];
-    $claimID = $list['ID'];
+    $claimID = $list['id'];
     $theClaim = $list['claim'];
     $corrAnsw = $list['correctAnswer'];
 
@@ -151,12 +166,12 @@ function removePlayerByID($json) {
     }
 
     $connection = db_connect();
-    if ($query = mysqli_prepare($connection, "DELETE FROM Player WHERE ID=?")) {
+    if ($query = mysqli_prepare($connection, "DELETE FROM Player WHERE id=?")) {
         mysqli_stmt_bind_param($query, "s", $playerID);
         $resultPlayer =  dbQueryRemove($query);
     }
     if (count($list) > 1) {
-        if ($query = mysqli_prepare($connection, "SELECT * FROM Player WHERE RoomID=?")) {
+        if ($query = mysqli_prepare($connection, "SELECT * FROM Player WHERE roomID=?")) {
             mysqli_stmt_bind_param($query, "s", $roomID);
             $playersInRoom =  dbQueryGetResult($query);
         }

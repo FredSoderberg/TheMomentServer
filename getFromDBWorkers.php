@@ -8,9 +8,9 @@
  */
 function getRoomsWithEmptySlotsWorker($connection) {
     if ($query = mysqli_prepare($connection, "
-                            SELECT a.ID ID, count(p.id) players, a.numOfPlayers freeSlots 
-                            FROM Room a LEFT OUTER JOIN Player p ON a.ID = p.RoomID 
-                            group by a.id HAVING count(p.ID) < a.numOfPlayers 
+                            SELECT a.id ID, count(p.id) players, a.numOfPlayers freeSlots 
+                            FROM Room a LEFT OUTER JOIN Player p ON a.ID = p.roomID 
+                            group by a.id HAVING count(p.id) < a.numOfPlayers 
                             ORDER BY a.numOfPlayers DESC")) {
         return dbQueryGetResult($query);
     }
@@ -23,7 +23,7 @@ function getRoomsWithEmptySlotsWorker($connection) {
  * @return array which contains an array of arrays representing the room
  */
 function getRoomByIDWorker($roomID, $connection) {
-    if ($query = mysqli_prepare($connection, "SELECT * FROM Room WHERE ID=?")) {
+    if ($query = mysqli_prepare($connection, "SELECT * FROM Room WHERE id=?")) {
         mysqli_stmt_bind_param($query, "i", $roomID);
         $room = dbQueryGetResult($query);
         $room = $room[0];
@@ -31,16 +31,19 @@ function getRoomByIDWorker($roomID, $connection) {
             return NULL;
         }
     }
-    if ($query = mysqli_prepare($connection, "SELECT * FROM Player WHERE RoomID=?")) {
+    if ($query = mysqli_prepare($connection, "SELECT * FROM Player WHERE roomID=?")) {
         mysqli_stmt_bind_param($query, "i", $roomID);
         $playerRows = dbQueryGetResult($query);
     }
     $playerList = [];
     foreach ($playerRows as $row) {
-        unset($row['RoomID']);
-        $claim = getClaimByIDWorker($row['Claim'],$connection);
+        unset($row['roomID']);
+        $claim = getClaimByIDWorker($row['claim'],$connection);
         $claim = $claim[0];
-        $row['Claim'] = $claim;
+        $claim['correctAnswer'] = (bool)$claim['correctAnswer'];
+        $row['answer'] = (bool)$row['answer'];
+        $row['isPlayer'] = (bool)$row['isPlayer'];
+        $row['claim'] = $claim;
         $playerList[] = $row;
     }
     $room['playerList'] = $playerList;
@@ -55,7 +58,7 @@ function getRoomByIDWorker($roomID, $connection) {
  * @return array which contains claim
  */
 function getClaimByIDWorker($claimID, $connection) {
-    if ($query = mysqli_prepare($connection, "SELECT * FROM Claim WHERE ID=?")) {
+    if ($query = mysqli_prepare($connection, "SELECT * FROM Claim WHERE id=?")) {
         mysqli_stmt_bind_param($query, "i", $claimID);
         return dbQueryGetResult($query);
     }
@@ -67,11 +70,11 @@ function getClaimByIDWorker($claimID, $connection) {
  * @return bool true if its crowded else false
  */
 function isRoomToFullWorker($connection, $roomID) {
-    if ($query = mysqli_prepare($connection, "SELECT numOfPlayers AS size FROM Room WHERE ID=?")) {
+    if ($query = mysqli_prepare($connection, "SELECT numOfPlayers AS size FROM Room WHERE id=?")) {
         mysqli_stmt_bind_param($query, "i", $roomID);
         $roomSize = dbQueryGetResult($query)[0]['size'];
     }
-    if ($query = mysqli_prepare($connection, "SELECT COUNT(player.RoomID) AS amount FROM player WHERE RoomID = ?")) {
+    if ($query = mysqli_prepare($connection, "SELECT COUNT(player.roomID) AS amount FROM player WHERE roomID = ?")) {
         mysqli_stmt_bind_param($query, "i", $roomID);
         $playersInRoom = dbQueryGetResult($query)[0]['amount'];
     }

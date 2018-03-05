@@ -37,18 +37,23 @@ function isRoundDone($json) {
 
     foreach ($rows as $row) {
         if ($row['Round'] < $roundNo) {
-            echo 0;
+            echo false;
             return;
         }
     }
-    echo 1;
+    echo true;
 }
 
 /**
  * A simple function that checks if the servers db is up.
  */
 function isServerAndDBUp() {
-    //TODO: Actually check if DB is online
-    echo "True";
+    $config = parse_ini_file('../dbConnection/config.ini');
+    $connection = mysqli_connect('localhost:3306',$config['username'],$config['password'],$config['dbname']);
+    if($connection) {
+        echo true;
+        return;
+    }
+    echo false;
 }
 ?>
