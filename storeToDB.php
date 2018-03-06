@@ -145,7 +145,9 @@ function updateRoom($json){
  */
 function createRoom(){
     $connection = db_connect();
-    if ($query = mysqli_prepare($connection, "INSERT INTO Room () Values()")) {
+    $nbrPlayers = 0;
+    if ($query = mysqli_prepare($connection, "INSERT INTO Room (numOfPlayers) Values(?)")) {
+        mysqli_stmt_bind_param($query, "s",$nbrPlayers);
         $id = dbQueryStoreGetId($query,$connection);
         echo $id;
     }
