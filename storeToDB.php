@@ -46,6 +46,9 @@ if(isset($form_action_func))
         case 'removeStragglers':
             removeStragglers($json);
             break;
+        case 'updateClaimNo':
+            updateClaimNo($json);
+            break;
 
     }
 }
@@ -204,6 +207,22 @@ function removeStragglers($json) {
     if ($query = mysqli_prepare($connection, "DELETE FROM Player WHERE roomID=? AND round < ?")) {
         mysqli_stmt_bind_param($query, "ii",$roomID,$roundNo);
         dbQueryRemove($query);
+        //TODO handle failure
+    }
+}
+
+/**
+ * updates claim in given room
+ * @param $json string in format [roomID,currentClaimNo]
+ */
+function updateClaimNo($json) {
+    $list = json_decode($json);
+    $roomID = $list[0];
+    $claimNo = $list[1];
+    $connection = db_connect();
+    if ($query = mysqli_prepare($connection, "UPDATE Room SET currentClaimNo=? WHERE id=?")) {
+        mysqli_stmt_bind_param($query, "ii",$claimNo,$roomID);
+        dbQuery($query);
         //TODO handle failure
     }
 }
