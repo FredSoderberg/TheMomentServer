@@ -29,14 +29,14 @@ function isRoundDone($json) {
     $roundNo = $list[1];
 
     $connection = db_connect();
-    if ($query = mysqli_prepare($connection, "SELECT * FROM Player WHERE RoomID=?")) {
+    if ($query = mysqli_prepare($connection, "SELECT * FROM Player WHERE roomID=?")) {
         mysqli_stmt_bind_param($query, "i", $roomID);
         $rows = db_query($query);
     }
     mysqli_close($connection);
 
     foreach ($rows as $row) {
-        if ($row['Round'] < $roundNo) {
+        if ($row['round'] < $roundNo) {
             echo false;
             return;
         }
