@@ -2,8 +2,13 @@
 
 require 'dbConnect.php';
 
+header('Content-Type: application/json');
+
 $form_action_func = $_GET['function'];
-$json = $_GET['jsonobj'];
+if( isset($_GET['jsonobj']) )
+{
+    $json = $_GET['jsonobj'];
+}
 if(isset($form_action_func))
 {
     switch ($form_action_func) {
@@ -31,7 +36,7 @@ function isRoundDone($json) {
     $connection = db_connect();
     if ($query = mysqli_prepare($connection, "SELECT * FROM Player WHERE roomID=?")) {
         mysqli_stmt_bind_param($query, "i", $roomID);
-        $rows = db_query($query);
+        $rows = dbQueryGetResult($query);
     }
     mysqli_close($connection);
 
