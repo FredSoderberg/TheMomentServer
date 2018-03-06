@@ -74,9 +74,9 @@ function isRoomToFullWorker($connection, $roomID) {
         mysqli_stmt_bind_param($query, "i", $roomID);
         $roomSize = dbQueryGetResult($query)[0]['size'];
     }
-    if ($query = mysqli_prepare($connection, "SELECT COUNT(player.roomID) AS amount FROM player WHERE roomID = ?")) {
+    if ($query = mysqli_prepare($connection, "SELECT COUNT(Player.roomID) AS amount FROM Player WHERE roomID = ?")) {
         mysqli_stmt_bind_param($query, "i", $roomID);
         $playersInRoom = dbQueryGetResult($query)[0]['amount'];
     }
-    return ($roomSize < $playersInRoom);
+    return ($roomSize <= $playersInRoom);
 }

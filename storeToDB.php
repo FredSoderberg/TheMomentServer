@@ -65,9 +65,8 @@ function updateRoomSize($json) {
 
 function storePlayerRound($json){
     $list = json_decode($json,true);
-    $list = $list[0];
-    $playerId = $list['id'];
-    $playerRound = $list['round'];
+    $playerId = $list[0];
+    $playerRound = $list[1];
     $connection = db_connect();
 
     setPlayersRoundWorker($connection,$playerId,$playerRound);
