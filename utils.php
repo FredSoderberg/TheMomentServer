@@ -29,7 +29,7 @@ function isRoundDone($json) {
     $roundNo = $list[1];
 
     $connection = db_connect();
-    if ($query = mysqli_prepare($connection, "SELECT * FROM player WHERE RoomID=?")) {
+    if ($query = mysqli_prepare($connection, "SELECT * FROM Player WHERE RoomID=?")) {
         mysqli_stmt_bind_param($query, "i", $roomID);
         $rows = db_query($query);
     }
