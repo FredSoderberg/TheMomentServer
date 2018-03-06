@@ -43,6 +43,9 @@ if(isset($form_action_func))
         case 'storePlayerRound':
             storePlayerRound($json);
             break;
+        case 'removeStragglers':
+            removeStragglers($json);
+            break;
 
     }
 }
@@ -185,4 +188,20 @@ function removePlayerByID($json) {
     $result = true;
     //TODO FIX IF FAIL!
     echo $result;
+}
+
+/**
+ * traverses the given room and deletes players with a lower round then given
+ * @param $json string in format [roomID,roundNo]
+ */
+function removeStragglers($json) {
+    $list = json_decode($json);
+    $roomID = $list[0];
+    $roundNo = $list[1];
+    $connection = db_connect();
+    if ($query = mysqli_prepare($connection, "DELETE FROM Player WHERE roomID=? AND round < ?")) {
+        mysqli_stmt_bind_param($query, "ii",$roomID,$roundNo);
+        dbQueryRemove($query);
+        //TODO handle failure
+    }
 }
