@@ -26,6 +26,9 @@ if(isset($form_action_func))
         case 'getClaimByID':
             getClaimByID($json);
             break;
+        case 'isPlayerInRoom':
+            isPlayerInRoom($json);
+        break;
     }
 }
 
@@ -104,4 +107,25 @@ function getFreeRoom($json){
     echo false;
     mysqli_close($connection);
     return;
+}
+
+/**
+ * Checks if given player is in room given
+ * @param $json string contain roomID and playerID
+ */
+function isPlayerInRoom($json) {
+    $list = json_decode($json);
+    $roomID = $list[0];
+    $playerID = $list[1];
+    $connection = db_connect();
+    if ($query = mysqli_prepare($connection, "SELECT COUNT(Player.id) AS bool FROM Player WHERE roomID=? AND id=?")) {
+        mysqli_stmt_bind_param($query, "ii",$roomID,$playerID);
+        $rows = dbQueryGetResult($query)[0]['bool'];
+        if ($rows) {
+            echo true;
+        } else {
+            echo false;
+        }
+        //TODO handle failure
+    }
 }
