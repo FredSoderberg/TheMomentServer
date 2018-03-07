@@ -20,11 +20,11 @@ if(isset($form_action_func))
             storePlayer($json);
             break;
         case 'updateRoom':
-        	updateRoom($json);
-        	break;
+            updateRoom($json);
+            break;
         case 'createRoom' :
-        	createRoom();
-        	break;
+            createRoom();
+            break;
         case 'updateRoomSize':
             updateRoomSize($json);
             break;
@@ -42,6 +42,9 @@ if(isset($form_action_func))
             break;
         case 'storePlayerRound':
             storePlayerRound($json);
+            break;
+        case 'storeRoundAndClaimNo':
+            storeRoundAndClaimNo();
             break;
         case 'removeStragglers':
             removeStragglers($json);
@@ -71,13 +74,30 @@ function updateRoomSize($json) {
 
 function storePlayerRound($json){
     $list = json_decode($json,true);
-    $playerId = $list[0];
+    $playerID = $list[0];
     $playerRound = $list[1];
     $connection = db_connect();
 
-    setPlayersRoundWorker($connection,$playerId,$playerRound);
+    setPlayersRoundWorker($connection,$playerID,$playerRound);
     echo $playerRound;
 }
+
+/**
+ * Save both current round of the player and the claimNo for the room
+ * @param $json string will contain id of room and player, claimNumber and round
+ */
+function storeRoundAndClaimNo($json){
+    $list = json_decode($json,true);
+    $roomID = $list[0];
+    $playerID = $list[1];
+    $roomClaimNo = $list[2];
+    $playerRound = $list[3];
+    $connection = db_connect();
+
+    setPlayersRoundAndClaimNo($connection, $playerID, $playerRound, $roomID, $roomClaimNo);
+    echo $roomClaimNo;
+}
+
 
 /**
  * creates a new player in db, depending on json it also assigns a room to player
@@ -142,7 +162,7 @@ function updatePlayerScore($json){
 }
 
 function updateRoom($json){
-	//TODO, add changes to Room, request room by id and then loop values and if changes are detected insert new value
+    //TODO, add changes to Room, request room by id and then loop values and if changes are detected insert new value
     //TODO probably gonna need a help function to handle players and claims.
 }
 

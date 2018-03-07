@@ -17,6 +17,7 @@ function storeNewPlayerWorker($connection,$name){
     }
 }
 
+
 /**
  * worker function for setting which round player currently is on
  * @param $connection mysqli, needed for db talk
@@ -28,8 +29,27 @@ function setPlayersRoundWorker($connection, $playerID, $round){
         mysqli_stmt_bind_param($query, "ss", $round,$playerID);
         dbQuery($query);
     }
-
 }
+
+/**
+ * Worker function for setting which round and claimNo player is currently on
+ * @param $connection mysqli, needed for db talk
+ * @param $playerID int indicating id of player
+ * @param $round int indicating round
+ * @param $roomID int indicating id of room
+ * @param $roomClaimNo int indicating claimNo
+ */
+function setPlayersRoundAndClaimNo($connection, $playerID, $round, $roomID, $roomClaimNo){
+    if ($query = mysqli_prepare($connection, "UPDATE Room, Player
+                                                    SET Room.currentClaimNo=?,
+                                                    Player.round =?
+                                                    WHERE Room.id=?
+                                                    AND Player.id=?")) {
+        mysqli_stmt_bind_param($query, "ss", $roomClaimNo, $round, $roomID, $playerID);
+        dbQuery($query);
+    }
+}
+
 
 /**
  * worker function for setting which room player belongs to
