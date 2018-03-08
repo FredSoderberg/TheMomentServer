@@ -45,7 +45,7 @@ function setPlayersRoundAndClaimNo($connection, $playerID, $round, $roomID, $roo
                                                     Player.round =?
                                                     WHERE Room.id=?
                                                     AND Player.id=?")) {
-        mysqli_stmt_bind_param($query, "ss", $roomClaimNo, $round, $roomID, $playerID);
+        mysqli_stmt_bind_param($query, "iiii",$roomClaimNo,$round,$roomID,$playerID);
         dbQuery($query);
     }
 }
