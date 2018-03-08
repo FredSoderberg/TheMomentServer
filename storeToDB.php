@@ -44,7 +44,7 @@ if(isset($form_action_func))
             storePlayerRound($json);
             break;
         case 'storeRoundAndClaimNo':
-            storeRoundAndClaimNo();
+            storeRoundAndClaimNo($json);
             break;
         case 'removeStragglers':
             removeStragglers($json);
