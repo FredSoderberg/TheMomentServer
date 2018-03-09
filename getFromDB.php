@@ -47,7 +47,6 @@ function getRandomRoom($json) {
     }
     $randRoom = array_rand($availableRooms);
     $roomID = $availableRooms[$randRoom]['id'];
-
     setPlayersRoomIDWorker($connection,$playerID,$roomID);
     if (!isRoomToFullWorker($connection,$roomID)) {
         echo json_encode(getRoomByIDWorker($roomID,$connection));
