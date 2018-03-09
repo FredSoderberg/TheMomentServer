@@ -7,7 +7,7 @@
  * @return array contains all rows with rooms available
  */
 function getRoomsWithEmptySlotsWorker($connection) {
-    if ($query = mysqli_prepare($connection, "SELECT a.id ID, count(p.id) players, a.numOfPlayers freeSlots 
+    if ($query = mysqli_prepare($connection, "SELECT a.id id, count(p.id) players, a.numOfPlayers freeSlots 
                             FROM Room a LEFT OUTER JOIN Player p ON a.ID = p.roomID 
                             group by a.id HAVING count(p.id) < a.numOfPlayers 
                             ORDER BY a.numOfPlayers DESC")) {
