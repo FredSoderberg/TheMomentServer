@@ -85,11 +85,12 @@ function setRoomSizeWorker ($connection,$roomID,$roomSize) {
  * @param $claimID the id of claim to update
  * @param $theClaim the phrase that should be changed
  * @param $corrAnsw updates the correct answer to suit the new claim
+ * @return bool success or not
  */
 function setClaimWorker($connection, $claimID, $theClaim, $corrAnsw) {
     if ($query = mysqli_prepare($connection, "UPDATE Claim SET claim=?, correctAnswer=? WHERE id=?")) {
         mysqli_stmt_bind_param($query, "sss", $theClaim, $corrAnsw, $claimID);
-        dbQuery($query);
+        return dbQuery($query);
     }
 }
 

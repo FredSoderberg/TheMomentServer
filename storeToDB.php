@@ -118,7 +118,7 @@ function storePlayer($json) {
 }
 
 /**
- * Updates a claim in DB, echoes id
+ * Updates a claim in DB, echoes succes or failure
  * @param $json string will contain the claim
  */
 
@@ -130,8 +130,7 @@ function updateClaim($json) {
     $corrAnsw = $list['correctAnswer'];
 
     $connection = db_connect();
-    setClaimWorker($connection, $claimID, $theClaim, $corrAnsw);
-    echo $claimID;
+    echo setClaimWorker($connection, $claimID, $theClaim, $corrAnsw);
 }
 
 /**
